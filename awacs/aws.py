@@ -7,6 +7,11 @@ import json
 import warnings
 from . import AWSHelperFn, AWSProperty, awsencode
 
+try:
+    from troposphere import Join
+except ImportError:
+    Join = None
+
 
 # Policy effect constants.
 Allow = "Allow"
@@ -45,16 +50,29 @@ class Action(AWSHelperFn):
 
 class BaseARN(AWSHelperFn):
     def __init__(self, service, resource, region='', account=''):
-        region_string = region.lower()
-        if region_string.startswith("cn-"):
-            aws_partition = "aws-cn"
-        elif region_string.startswith("us-gov"):
-            aws_partition = "aws-us-gov"
+        if isinstance(region, (str, unicode)):
+            region_string = region.lower()
+            if region_string.startswith("cn-"):
+                aws_partition = "aws-cn"
+            elif region_string.startswith("us-gov"):
+                aws_partition = "aws-us-gov"
+            else:
+                aws_partition = "aws"
         else:
-            aws_partition = "aws"
+            aws_partition = 'aws'  # TODO: allow explicit partition kwarg
 
-        self.data = "arn:%s:%s:%s:%s:%s" % (
-            aws_partition, service, region, account, resource)
+        if Join is not None:
+            # Prefer using troposphere to generate ARNs
+            self.data = Join(':', [
+                aws_partition,
+                service,
+                region,
+                account,
+                resource,
+            ])
+        else:
+            self.data = "arn:%s:%s:%s:%s:%s" % (
+                aws_partition, service, region, account, resource)
 
     def JSONrepr(self):
         return self.data
