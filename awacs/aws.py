@@ -64,6 +64,7 @@ class BaseARN(AWSHelperFn):
         if Join is not None:
             # Prefer using troposphere to generate ARNs
             self.data = Join(':', [
+                'arn',
                 aws_partition,
                 service,
                 region,
