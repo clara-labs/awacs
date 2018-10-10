@@ -6,7 +6,7 @@
 from aws import Action as BaseAction
 from aws import BaseARN
 
-service_name = 'Amazon DynamoDB Accelerator'
+service_name = 'Amazon DynamoDB Accelerator (DAX)'
 prefix = 'dax'
 
 
@@ -42,9 +42,10 @@ DescribeEvents = Action('DescribeEvents')
 DescribeParameterGroups = Action('DescribeParameterGroups')
 DescribeParameters = Action('DescribeParameters')
 DescribeSubnetGroups = Action('DescribeSubnetGroups')
-Endpoints = Action('Endpoints')
+DescribeTable = Action('DescribeTable')
 GetItem = Action('GetItem')
 IncreaseReplicationFactor = Action('IncreaseReplicationFactor')
+ListTables = Action('ListTables')
 ListTags = Action('ListTags')
 PutItem = Action('PutItem')
 Query = Action('Query')

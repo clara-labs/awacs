@@ -8,8 +8,7 @@ import json
 import re
 import types
 
-__version__ = "0.7.2"
-
+__version__ = "0.8.1"
 
 valid_names = re.compile(r'^[a-zA-Z0-9]+$')
 
@@ -96,9 +95,25 @@ class AWSObject(object):
         for k, v in self.props.items():
             if v[1] and k not in self.properties:
                 raise ValueError("Resource %s required in type %s" %
-                                 (k, self.type))
+                                 (k, type(self)))
         self.validate()
         return self.resource
+
+    def to_json(self, indent=4, sort_keys=True):
+        p = self.properties
+        return json.dumps(p, cls=awsencode, indent=indent, sort_keys=sort_keys)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.to_json() == other.to_json()
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __hash__(self):
+        return hash(self.to_json())
 
 
 class AWSProperty(AWSObject):
@@ -119,6 +134,22 @@ class AWSHelperFn(object):
             return data.name
         else:
             return data
+
+    def to_json(self, indent=4, sort_keys=True):
+        p = self
+        return json.dumps(p, cls=awsencode, indent=indent, sort_keys=sort_keys)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.to_json() == other.to_json()
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __hash__(self):
+        return hash(self.to_json())
 
 
 class awsencode(json.JSONEncoder):

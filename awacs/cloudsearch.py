@@ -23,6 +23,7 @@ class ARN(BaseARN):
                      account=account)
 
 
+AddTags = Action('AddTags')
 BuildSuggesters = Action('BuildSuggesters')
 CreateDomain = Action('CreateDomain')
 DefineAnalysisScheme = Action('DefineAnalysisScheme')
@@ -45,6 +46,8 @@ DescribeServiceAccessPolicies = Action('DescribeServiceAccessPolicies')
 DescribeSuggesters = Action('DescribeSuggesters')
 IndexDocuments = Action('IndexDocuments')
 ListDomainNames = Action('ListDomainNames')
+ListTags = Action('ListTags')
+RemoveTags = Action('RemoveTags')
 UpdateAvailabilityOptions = Action('UpdateAvailabilityOptions')
 UpdateScalingParameters = Action('UpdateScalingParameters')
 UpdateServiceAccessPolicies = Action('UpdateServiceAccessPolicies')

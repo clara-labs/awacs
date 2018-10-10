@@ -3,15 +3,14 @@
 #
 # See LICENSE file for full license.
 
-import json
 import warnings
-from . import AWSHelperFn, AWSProperty, awsencode
 
 try:
     from troposphere import Join
 except ImportError:
     Join = None
 
+from . import AWSHelperFn, AWSProperty
 
 # Policy effect constants.
 Allow = "Allow"
@@ -59,7 +58,11 @@ class BaseARN(AWSHelperFn):
             else:
                 aws_partition = "aws"
         else:
-            aws_partition = 'aws'  # TODO: allow explicit partition kwarg
+            aws_partition = "aws"
+
+        regionless = ['iam', 's3']
+        if service in regionless:
+            region = ""
 
         if Join is not None:
             # Prefer using troposphere to generate ARNs
@@ -187,10 +190,6 @@ class Policy(AWSProperty):
         'Statement': ([Statement], True),
         'Version': (basestring, False),
     }
-
-    def to_json(self, indent=4, sort_keys=True):
-        p = self.properties
-        return json.dumps(p, cls=awsencode, indent=indent, sort_keys=sort_keys)
 
     def JSONrepr(self):
         return self.properties
